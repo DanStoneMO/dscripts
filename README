@@ -35,6 +35,7 @@ cmonitor -----------------------------------------------------------------------
 Polls all workflows every minute to reports on the stauses of active tasks in active workflows
 Automatically stops once all tasks have succeeded or failed
 This script keeps track of the flows in a temporary file, but will fail to clean it up if you quit early
+It can also be used to effectively wait until all workflows have finished/failed
 Usage:
 cmonitor
 
@@ -52,7 +53,7 @@ ctestall -----------------------------------------------------------------------
 Launches all variations of a workflow, one for each optional config
 Usage:
 ctestall <base-name> <workflow-dir> ["extra-options"]
-Make sure you quote any extra options together, these will be passed striaght to the vip command
+Make sure you quote any extra options together, these will be passed straight to the vip command
 
 ctidy --------------------------------------------------------------------------------------------------
 Cleans all stopped workflows, and records all other workflows
