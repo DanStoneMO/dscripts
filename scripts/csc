@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+export CYLC_VERSION=8
+cylc stop $1
+sleep 5
+cylc clean -y $1
+

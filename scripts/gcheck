@@ -1,0 +1,34 @@
+#!/usr/bin/env bash
+#gmanage
+#$0
+echo "Getting latest develop versions"
+while IFS= read -r clone; do
+	cd ~/clones/$clone || exit 1
+	echo "### $clone - develop ###"
+	git fetch --all
+	clonestatus=`git checkout develop || exit 1`
+	if [[ $clonestatus == *'is behind'* ]]; then
+		echo "<+> $clonestatus <+>"
+	else
+		echo 'up to date'
+	fi
+	echo ""
+done < ~/clones/gmanage_members
+
+
+echo ""
+echo "Own branches"
+while IFS= read -r line; do
+	clone2="${line%:*}"
+	branch="${line#*:}"
+	cd ~/clones/$clone2 || exit 1
+	echo "### $clone2/$branch ###"
+	branchstatus='none'
+	branchstatus=`git checkout $branch || exit 1`
+	if [[ $branchstatus == *'branch is ahead'* || $branchstatus == *'branch is behind'* ]]; then
+		echo "<+> $branchstatus <+>"
+	else
+		echo 'up to date'
+	fi
+	echo ""
+done < ~/clones/gmanage_branches

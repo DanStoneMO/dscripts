@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+export CYLC_VERSION=8
+running=true
+prevline='nothing'
+sf=cmonitor_scan
+fails='0'
+submits='0'
+successes='0'
+subfails='0'
+runnings='0'
+while [ $running == true ]; do
+	running=false
+	cylc scan --sort --colour-blind -t rich > $sf
+	while IFS= read -r line; do
+		if [[ $line == *"PID"* ]]; then
+			fails='0'
+			submits='0'
+			successes='0'
+			subfails='0'
+			runnings='0'
+		fi
+		if [[ $line == *"failed:"* ]]; then
+			pre="${line#*failed:}"
+			fails="${pre%% *}"
+		fi
+		if [[ $line == *"submitted:"* ]]; then
+			pre="${line#*submitted:}"
+			submits="${pre%% *}"
+			running=true
+		fi
+		if [[ $line == *"succeeded:"* ]]; then
+			pre="${line#*succeeded:}"
+			successes="${pre%% *}"
+		fi
+		if [[ $line == *"submit-failed:"* ]]; then
+			pre="${line#*submit-failed:}"
+			subfails="${pre%% *}"
+		fi
+		if [[ $line == *"running:"* ]]; then
+			pre="${line#*running:}"
+			runnings="${pre%% *}"
+			running=true
+		fi
+		if [[ $line == *"state totals"* ]]; then
+			message="Submitted:$submits Running:$runnings"
+			if [[ $fails != '0' ]]; then
+				message="$message Failed:$fails"
+			fi
+			if [[ $subfails != '0' ]]; then
+				message="$message Submit-fails:$subfails"
+			fi
+			if [[ $submits != '0' || $runnings != '0' || $subfails != '0' ]]; then
+				echo ''
+				echo "${prevline% *}"
+				echo "${line#* totals }"
+			fi
+		fi
+		prevline=$line
+	done < $sf
+	sleep 60
+	echo ''
+	echo ''
+	echo ''
+done
+rm cmonitor_scan

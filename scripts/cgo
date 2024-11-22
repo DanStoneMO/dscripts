@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+export CYLC_VERSION=8
+cylc vip . -n $1 --no-run-name
+cylc tui $1

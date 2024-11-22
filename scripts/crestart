@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+#crestart flow
+#$0       $1
+export CYLC_VERSION=8
+cylc stop --now --now $1
+sleep 5
+cylc clean $1 -y
+repo="${1%%_*}"
+name="${1%/run*}"
+opt="${name#*_}"
+cylc vip /home/h04/dstone/clones/$repo -n $name -O $opt
+

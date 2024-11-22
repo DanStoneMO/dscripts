@@ -1,0 +1,101 @@
+This repo is a collection of bash scripts I made for personal use.
+Whilst not intended for public use, you are free to install and do with them what you wish.
+The scripts are primarily focused for automating certain git and cylc processes,
+their purposes and arguments will be listed below.
+
+Do note that these are not developed to a professional standard,
+they can and will break and do bad things if you try to break them.
+
+REQUIREMENTS
+For scripts that work on your local git repos, they will expect to find them in the directory
+$HOME/clones
+this will be automatically created during installation if you don't already have it
+
+INSTALLATION
+Enable the installation script using:
+chmod +x install
+(assuming you are in the dscripts dir right now)
+Then, run the install script and enable the installed scripts using
+cmod +x $HOME/bin/*
+
+SCRIPTS
+cgetlogs -----------------------------------------------------------------------------------------------
+Extracts log files of a given name from all active cylc workflows to a destination folder for
+easier comparison and searching
+Usage:
+cgetlogs <target-file-name> <destination>
+
+cgo ----------------------------------------------------------------------------------------------------
+Essentially an alias to run and view the workflow in the current dir with no run name
+Usage: 
+cgo <flow-name>
+This will launch the workflow in the current directory
+
+cmonitor -----------------------------------------------------------------------------------------------
+Polls all workflows every minute to reports on the stauses of active tasks in active workflows
+Automatically stops once all tasks have succeeded or failed
+This script keeps track of the flows in a temporary file, but will fail to clean it up if you quit early
+Usage:
+cmonitor
+
+crestart -----------------------------------------------------------------------------------------------
+Stops, cleans and then reruns a workflow
+Usage:
+crestart <flow-name>
+
+csc ----------------------------------------------------------------------------------------------------
+Stops and cleans a workflow
+Usage:
+csc <flow-name>
+
+ctestall -----------------------------------------------------------------------------------------------
+Launches all variations of a workflow, one for each optional config
+Usage:
+ctestall <base-name> <workflow-dir> ["extra-options"]
+Make sure you quote any extra options together, these will be passed striaght to the vip command
+
+ctidy --------------------------------------------------------------------------------------------------
+Cleans all stopped workflows, and records all other workflows
+When run again, the recorded workflows are shut down before cleaning starts
+Workflows can be spared from the shutdown by removing their names from the file 'ctidy_scanlist'
+Usage:
+ctidy
+
+ctm ----------------------------------------------------------------------------------------------------
+High-level script to shut down and clean all workflows, then launch all optional configs of a workflow
+and then monitor them
+Usage:
+ctm <base-name> <workflow-dir> ["args-for-vip"]
+any arguments for vip must be quoted together
+
+ctmg ---------------------------------------------------------------------------------------------------
+Same as ctm, but also fetches all job.out and job.err files and finishes by reporting on all workflows
+with failed tasks
+Usage:
+ctmg <base-name> <workflow-dir> <logs-destination> ["args-for-vip"]
+
+gcheck -------------------------------------------------------------------------------------------------
+Reports statuses of all local repos marked for managing, alerting when the remote version of the
+'develop' branch is updated.
+The same is then done for other specific branches marked for managing, reporting any differences
+between the local and rmeote versions
+Prep:
+Add the names of all repos to monitor to ~/clones/gmanage_members
+One name per line, no empty lines or extra syntax
+Add the branches to monitor to ~/clones/gmanage_branches
+In the format:
+repo-name:branch-name
+One per line
+Usage:
+gcheck
+
+gmanage ------------------------------------------------------------------------------------------------
+For all local repos marked for managing, updates their 'develop' branches to match the remote versions
+as needed.
+For these updated repos, any of their branches marked for managing have develop's updates merged into
+them, using the 'ort -x ours' method (changes to develop cannot override conflicting changes on the
+branches being merged to) before being automatically committed and pushed back to the remote repo
+Prep:
+Same as gcheck
+Usage:
+gmanage

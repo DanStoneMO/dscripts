@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+echo "Installing supporting files"
+cp aux/bin/* $HOME/bin || { mkdir $HOME/bin; cp aux/bin/* $HOME/bin }
+cp aux/clones/* $HOME/clones || { mkdir $HOME/clones; cp aux/clones/* $HOME/clones }
+echo "Installing scripts"
+cp scripts/* $HOME/bin || { mkdir $HOME/bin; cp scripts/* $HOME/bin }
+echo "Done! Don't forget to run the follwing to enable the scripsts:"
+echo "[~/bin]$ chmod +x *

@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+#ctestall <base-name> <dir> <options>
+#$0       $1          $2    $3
+#                           make sure options are quoted together!
+
+#-S REF_JJDOCS='"feature/point_yamls_to_jjcommon"'
+#ctestall <name> <dir> "-S REF_JJDOCS='"feature/coastdist-geo-to-meta"' REF_JJAUX='"feature/coastdist-geovals-to-metadata"' REF_VARPY='"feature/coastdist-geo-to-meta"'"
+
+export CYLC_VERSION=8
+for filepath in $2/opt/*; do
+	filename="${filepath##*/}"
+	optfile="${filename%.*}"
+	opt="${optfile#*suite-}"
+	echo "##### cylc vip $2 -n $1_$opt -O $opt $3 --no-run-name #####"
+	cylc vip $2 -n $1_$opt -O $opt $3 --no-run-name || exit 1
+done

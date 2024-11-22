@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#cgetlogs target_file destination
+#$0       $1          $2
+export CYLC_VERSION=8
+al=cgl_activeflows
+cylc scan --states=all -t name > $al
+while IFS= read -r workflow; do
+	path_flow=~/cylc-run/$workflow/log/job
+	for path_cycle in $path_flow/*; do
+		namep2="${path_cycle##*/}"
+		for path_task in $path_cycle/*; do
+			namep3="${path_task##*/}"
+			path_log=$path_task/NN/$1
+			fullname="${workflow//'/'/_}"_"$namep2"_"$namep3"_"$1"
+			cp $path_log $2/$fullname 2>/dev/null
+			#echo $fullname
+		done
+	done
+done < $al

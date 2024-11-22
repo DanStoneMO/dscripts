@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+#ctmg name source destination vip-args
+#$0   $1   $2     $3          $4
+ctidy2
+ctidy2
+ctestall $1 $2 $4
+cmonitor
+cgetlogs job.err $3
+cgetlogs job.out $3
+cylc scan --sort -t rich
+

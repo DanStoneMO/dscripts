@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+export CYLC_VERSION=8
+echo "Shutting down running flows from last time"
+#wl="ctidy_watchlist"
+sl="ctidy_scanlist"
+while IFS= read -r line; do
+	echo "Shutting down $line"
+	cylc stop --now --now $line
+done < $sl
+sleep 5
+echo "Attempting cleaning now"
+for filepath in ~/cylc-run/*; do
+	file="${filepath##*/}"
+	cylc clean -y $file 2>/dev/null || echo "$file still running"
+done
+cylc scan -t name > $sl
+
+

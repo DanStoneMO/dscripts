@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#ctmg name source arguments
+#$0   $1   $2     $3 
+ctidy2
+ctidy2
+ctestall $1 $2 $3
+cmonitor
+cylc scan --states=all --sort -t rich
+
