@@ -5,5 +5,5 @@ ctidy2
 ctidy2
 ctestall $1 $2 $3
 cmonitor
-cylc scan --states=all --sort -t rich
+cylc scan --sort -t rich
 
