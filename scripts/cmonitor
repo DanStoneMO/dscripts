@@ -49,7 +49,7 @@ while [ $running == true ]; do
 			if [[ $subfails != '0' ]]; then
 				message="$message Submit-fails:$subfails"
 			fi
-			if [[ $submits != '0' || $runnings != '0' || $subfails != '0' ]]; then
+			if [[ $submits != '0' || $runnings != '0' || $subfails != '0' || $fails != '0' ]]; then
 				echo ''
 				echo "${prevline% *}"
 				echo "${line#* totals }"
