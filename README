@@ -19,6 +19,22 @@ Then, run the install script and enable the installed scripts using
 cmod +x $HOME/bin/*
 
 SCRIPTS
+build-and-test ----------------------------------------------------------------------------------------
+A specialised script for testing repos that require running through mo-bundle.
+It builds two versions of mo-bundle; and unmodified 'control' and another with your repo checked out.
+It then runs a testing suite repo (such as sith) on the control and test versions of mo-bundle.
+Usage:
+build-and-test <base-name> <repo-for-mob> <build-repo-branch> <testing-repo> ["extra-settings"]
+IMPORTANT repo-for-mob must include the organisation name, since it gets cloned into mo-bundle live
+Do not include the organisation name for the test repo ,since this draws from your local clones.
+You must surround your list of extra-settings with quotes.
+
+ccleanall ----------------------------------------------------------------------------------------------
+Stops and cleans all workflows. It is designed to run slowly overnight/on break, but can be made to
+work faster with the --fast setting, though this can cause HPC errors.
+Usage:
+ccleanall (--fast)
+
 cgetlogs -----------------------------------------------------------------------------------------------
 Extracts log files of a given name from all active cylc workflows to a destination folder for
 easier comparison and searching
