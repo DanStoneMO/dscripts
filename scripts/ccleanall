@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#ccleanall --fast
+#$0
+
+casl=ccleanall_scanfile
+#Default settings
+FAST=false
+#Parse settings
+while [[ "$#" -gt 0 ]]; do
+	case $1 in
+		--fast) FAST=true ;;
+		*) echo "$1 is not a valid parameter"; exit 1 ;;
+	esac
+	shift
+done
+export CYLC_VERSION=8
+cd ~/bin
+cylc scan -t name > $casl
+if [[ $FAST == true ]]; then
+	while IFS= read -r line; do
+		echo "Shutting down $line"
+		cylc stop --now --now $line
+	done < $casl
+	sleep 5
+	ctidy2
+else
+	echo "Requesting shutdown from all workflows"
+	while IFS= read -r line; do
+		echo "--> $line"
+		cylc stop $line
+	done < $casl
+	cmonitor
+	ctidy2
+fi
+rm $casl
