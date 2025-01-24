@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+#mobtest <name> "(settings-for-sith)"
+#$0      #$1    #$2
+name=$1
+settings=$2
+export CYLC_VERSION=8
+cd ~/clones/mob-$name || exit 1;
+./bin/bbb ctest "mob-$name"
+cd ~/clones/mo-bundle || exit 1;
+./bin/bbb ctest "mob-$name-ctrl"
+cd ~/bin
+cmonitor
+ctestall "sith-$name-livemob" ~/clones/sith "-S JEDI_BUILD='"~/cylc-run/mob-$name"' $settings" || exit 1
+ctestall "sith-$name-ctrlmob" ~/clones/sith "-S JEDI_BUILD='"~/cylc-run/mob-$name-ctrl"'" || exit 1
+cmonitor

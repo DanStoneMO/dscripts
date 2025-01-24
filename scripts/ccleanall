@@ -2,6 +2,7 @@
 #ccleanall --fast
 #$0
 
+export CYLC_VERSION=8
 casl=ccleanall_scanfile
 #Default settings
 FAST=false
@@ -22,7 +23,7 @@ if [[ $FAST == true ]]; then
 		cylc stop --now --now $line
 	done < $casl
 	sleep 5
-	ctidy2
+	ctidy
 else
 	echo "Requesting shutdown from all workflows"
 	while IFS= read -r line; do
@@ -30,6 +31,11 @@ else
 		cylc stop $line
 	done < $casl
 	cmonitor
-	ctidy2
+	ctidy
+fi
+cylc scan -t name --state=all > $casl
+if [[ -s $casl ]]; then
+	echo "Not all suites cleared, running ctidy again"
+	ctidy
 fi
 rm $casl
