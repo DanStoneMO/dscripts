@@ -19,15 +19,15 @@ Then, run the install script and enable the installed scripts using
 cmod +x $HOME/bin/*
 
 SCRIPTS
-build-and-test ----------------------------------------------------------------------------------------
+mobtest ----------------------------------------------------------------------------------------
 A specialised script for testing repos that require running through mo-bundle.
 It builds two versions of mo-bundle; and unmodified 'control' and another with your repo checked out.
-It then runs a testing suite repo (such as sith) on the control and test versions of mo-bundle.
+It then runs sith on the control and test versions of mo-bundle.
 Usage:
-build-and-test <base-name> <repo-for-mob> <build-repo-branch> <testing-repo> ["extra-settings"]
-IMPORTANT repo-for-mob must include the organisation name, since it gets cloned into mo-bundle live
-Do not include the organisation name for the test repo ,since this draws from your local clones.
+mobtest <base-name> ["extra-settings"]
 You must surround your list of extra-settings with quotes.
+The script expects to find the control mo-bundle and your custom bundle called
+mob-<base-name> in ~/clones
 
 ccleanall ----------------------------------------------------------------------------------------------
 Stops and cleans all workflows. It is designed to run slowly overnight/on break, but can be made to
