@@ -9,7 +9,7 @@ cd ~/clones/mob-$name || exit 1;
 cd ~/clones/mo-bundle || exit 1;
 ./bin/bbb ctest "mob-$name-ctrl"
 cd ~/bin
-cmonitor
+cmonitor --retry
 ctestall "sith-$name-livemob" ~/clones/sith "-S JEDI_BUILD='"~/cylc-run/mob-$name"' $settings" || exit 1
 ctestall "sith-$name-ctrlmob" ~/clones/sith "-S JEDI_BUILD='"~/cylc-run/mob-$name-ctrl"'" || exit 1
-cmonitor
+cmonitor --retry

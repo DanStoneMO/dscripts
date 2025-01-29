@@ -8,6 +8,19 @@ submits='0'
 successes='0'
 subfails='0'
 runnings='0'
+#Parse settings
+RETRY=false
+while [[ "$#" -gt 0 ]]; do
+	case $1 in
+		--retry) RETRY=true ;;
+		*) echo "$1 is not a valid parameter"; exit 1;;
+	esac
+	shift
+done
+cd ~/bin
+if [[ $RETRY == true ]]; then
+	> cbabysit_failrecords
+fi
 while [ $running == true ]; do
 	running=false
 	cylc scan --sort --colour-blind -t rich > $sf
@@ -49,10 +62,15 @@ while [ $running == true ]; do
 			if [[ $subfails != '0' ]]; then
 				message="$message Submit-fails:$subfails"
 			fi
-			if [[ $submits != '0' || $runnings != '0' || $subfails != '0' || $fails != '0' ]]; then
+			if [[ $submits != '0' || $runnings != '0' || $subfails != '0' ]]; then
 				echo ''
 				echo "${prevline% *}"
 				echo "${line#* totals }"
+			fi	
+			cylc poll "${prevline% *}"//* 1>/dev/null
+			if [[ $fails != '0' && $RETRY == true ]]; then
+				echo "Retrying failed tasks..."
+				cbabysit
 			fi
 		fi
 		prevline=$line
@@ -63,3 +81,4 @@ while [ $running == true ]; do
 	echo ''
 done
 rm cmonitor_scan
+cylc scan --state=all --sort -t rich

@@ -1,0 +1,42 @@
+#!/usr/bin/env bash
+#cbabysit
+#$0
+ipf=cbabysit_input
+frf=cbabysit_failrecords
+sf=cbabysit_scanfile
+cylc scan --sort -t name > $sf
+cd ~/bin
+> $ipf
+while IFS= read -r flow; do
+	#echo "WORKFLOW $flow" >> $ipf
+	cylc dump $flow -t >> $ipf
+	while IFS= read -r task; do
+		#reading task statuses from ipf
+		status="${task##*:}"
+		if [[ $status == "failed"* ]]; then
+			taskname="${task%%:*}"
+			#Check how many times it's failed
+			present='false'
+			fails=0
+			while IFS= read -r failrecord; do
+				#Reading fail records
+				if [[ "${failrecord}" == $taskname ]]; then
+					fails=$((fails + 1))
+				fi
+			done < $frf #End of failrecords read
+			echo "$taskname" >> $frf
+			if [[ $fails -le 5 ]]; then
+#				if [[ $taskname == *"make_mo__spice_intel" ]]; then
+#					echo "Automatic rebeuild: $flow//$taskname"
+#					tasknameshort="${taskname##*:}"
+#					cd ~/cylc-run/$flow/share || exit 1
+#					rm -rf $tasknameshort
+#					rm -rf $tasknameshort'_debug'
+#					cylc trigger #cmake
+#				fi
+				echo "Automatic retrigger: $flow//$taskname"
+				cylc trigger $flow//$taskname
+			fi
+		fi
+	done < $ipf #End of task scope
+done < $sf #End of workflow scope

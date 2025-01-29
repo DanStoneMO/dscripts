@@ -19,7 +19,7 @@ Then, run the install script and enable the installed scripts using
 cmod +x $HOME/bin/*
 
 SCRIPTS
-mobtest ----------------------------------------------------------------------------------------
+mobtest ------------------------------------------------------------------------------------------------
 A specialised script for testing repos that require running through mo-bundle.
 It builds two versions of mo-bundle; and unmodified 'control' and another with your repo checked out.
 It then runs sith on the control and test versions of mo-bundle.
@@ -28,6 +28,18 @@ mobtest <base-name> ["extra-settings"]
 You must surround your list of extra-settings with quotes.
 The script expects to find the control mo-bundle and your custom bundle called
 mob-<base-name> in ~/clones
+
+cbabysit -----------------------------------------------------------------------------------------------
+Retriggers any failed tasks in your running cylc flows. To avoid endlessly restarting true failures,
+it gives up after 6 attempts by tracking the fails it has seen in ~/bin/cbabysit_failrecords.
+This aux file is never emptied by the script, you can empty it manually with:
+> cbabysit_failrecords
+However, you should really run this via: cmonitor --retry
+Which handles all of that for you
+Usage:
+cmonitor --retry
+Or, to manually run it once:
+cbabysit
 
 ccleanall ----------------------------------------------------------------------------------------------
 Stops and cleans all workflows. It is designed to run slowly overnight/on break, but can be made to
@@ -52,8 +64,9 @@ Polls all workflows every minute to reports on the stauses of active tasks in ac
 Automatically stops once all tasks have succeeded or failed
 This script keeps track of the flows in a temporary file, but will fail to clean it up if you quit early
 It can also be used to effectively wait until all workflows have finished/failed
+The --retry setting can be added to auto-retrigger failed tasks, via cbabysit
 Usage:
-cmonitor
+cmonitor (--retry)
 
 crestart -----------------------------------------------------------------------------------------------
 Stops, cleans and then reruns a workflow
