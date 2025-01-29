@@ -7,16 +7,24 @@ Do note that these are not developed to a professional standard,
 they can and will break and do bad things if you try to break them.
 
 REQUIREMENTS
+I strongly recommend having a directory ~/bin to put any scripts you use in, some of them
+will expect to find this directory when running.
 For scripts that work on your local git repos, they will expect to find them in the directory
 $HOME/clones
-this will be automatically created during installation if you don't already have it
+These dirs will be automatically created during installation if you don't already have them.
 
 INSTALLATION
+(This installs of all them)
 Enable the installation script using:
 chmod +x install
 (assuming you are in the dscripts dir right now)
 Then, run the install script and enable the installed scripts using
 cmod +x $HOME/bin/*
+
+You can also just manually copy any of the scripts and put them in the right places.
+If they throw an error due to not being able to open a file, check to see if that file is in
+dscripts/aux/bin or dscripts/aux/clones
+and copy it to ~/bin or ~/clones respectively
 
 SCRIPTS
 mobtest ------------------------------------------------------------------------------------------------
